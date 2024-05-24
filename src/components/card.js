@@ -1,4 +1,4 @@
-import {open} from "./modal"
+import {openModal} from "./modal"
 
 //Функция создания карточки
 function createCard(element, deleteCard, likeCard, openImage){
@@ -11,16 +11,17 @@ function createCard(element, deleteCard, likeCard, openImage){
   const deleteButton = card.querySelector('.card__delete-button');
   const cardImage = card.querySelector('.card__image');
   const imagePopup = document.querySelector('.popup_type_image')
-  deleteButton.addEventListener('click',function(){
-   deleteCard = removeCard(card)
-  });
-  likeButton.addEventListener('click', function(){
-    likeCard = addLike(likeButton)
+
+  deleteCard = deleteButton.addEventListener('click',function(){
+    removeCard(card)
+  })
+  likeCard= likeButton.addEventListener('click', function(){
+    addLike(likeButton)
   })
   openImage = cardImage.addEventListener('click', function(){
   imagePopup.querySelector('.popup__image').src = element.link
   imagePopup.querySelector('.popup__caption').textContent = element.name
-    open(imagePopup)
+    openModal(imagePopup)
  })
   return card
 }
