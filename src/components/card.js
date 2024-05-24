@@ -1,7 +1,5 @@
-import {openModal} from "./modal"
-
-//Функция создания карточки
-function createCard(element, deleteCard, likeCard, openImage){
+/* Функция создания карточки */
+function createCard(element, removeCard, addLike, openImage){
   const cardTemplate = document.querySelector('#card-template').content;
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   card.querySelector('.card__image').src = element.link;
@@ -10,26 +8,23 @@ function createCard(element, deleteCard, likeCard, openImage){
   const likeButton = card.querySelector('.card__like-button')
   const deleteButton = card.querySelector('.card__delete-button');
   const cardImage = card.querySelector('.card__image');
-  const imagePopup = document.querySelector('.popup_type_image')
 
-  deleteCard = deleteButton.addEventListener('click',function(){
+  deleteButton.addEventListener('click',function(){
     removeCard(card)
   })
-  likeCard= likeButton.addEventListener('click', function(){
+  likeButton.addEventListener('click', function(){
     addLike(likeButton)
   })
-  openImage = cardImage.addEventListener('click', function(){
-  imagePopup.querySelector('.popup__image').src = element.link
-  imagePopup.querySelector('.popup__caption').textContent = element.name
-    openModal(imagePopup)
+  cardImage.addEventListener('click', function(){
+    openImage(element)
  })
   return card
 }
-// Функция удаления карточки
+/* Функция удаления карточки */
 function removeCard(card) {
   card.remove()
 }
-// Функция добавления лайка
+/* Функция добавления лайка */
 function addLike(element){
   if(element.classList.contains('card__like-button_is-active')){
     element.classList.remove('card__like-button_is-active')
