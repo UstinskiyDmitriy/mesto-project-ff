@@ -55,9 +55,10 @@ function newCardFormSubmit(evt) {
 }
 
 /* Открытие попапов */
-profileEditButton.addEventListener('click', function(evt){
+profileEditButton.addEventListener('click', function(){
   openModal(profilePopup)
-  profileFormElement.reset()
+  nameInput.value = profileTitle.textContent
+  jobInput.value = profileDescription.textContent
 })
 
 profileAddButton.addEventListener('click', function(){
