@@ -1,27 +1,46 @@
-import { initialCards } from "./cards";
 import "../pages/index.css"
-import {addLike, createCard, removeCard} from "./card.js"
+import {addLike, createCard, handleDeleteCard, removeCard} from "./card.js"
 import {openModal, closeModal, closeOverlay} from "./modal.js"
+import {enableValidation,clearValidation, validationConfig} from "./validation.js"
+import { deleteCardByApi, 
+  getInitialCards,
+  getUser,
+  getCards,
+  patchProfile,
+  postCard} from "./api.js";
+import { profileFormSubmit } from "./forms/editProfileForm.js";
+import { newCardFormSubmit } from "./forms/newCardForm.js";
+import { handleCardDelete, openPopupDelete} from "./forms/deleteCardForm.js";
+
+
 
 // DOM узлы
-const content = document.querySelector('.content');
-const profileTitle = content.querySelector('.profile__title')
-const profileDescription = content.querySelector('.profile__description')
-const places = content.querySelector('.places');
-const placesList = places.querySelector('.places__list');
-const profileEditButton = content.querySelector('.profile__edit-button')
-const profileAddButton = content.querySelector('.profile__add-button')
-const popupList = document.querySelectorAll('.popup');
-const popupCloseButtonList = document.querySelectorAll('.popup__close')
-const profilePopup = document.querySelector('.popup_type_edit');
-const popupNewCard = document.querySelector('.popup_type_new-card')
-const imagePopup = document.querySelector('.popup_type_image')
-const newCardFormElement = popupNewCard.querySelector('.popup__form')
-const profileFormElement = profilePopup.querySelector('.popup__form');
-const nameInput = profileFormElement.querySelector('.popup__input_type_name');
-const jobInput = profileFormElement.querySelector('.popup__input_type_description');
-const inputCardName = document.querySelector('.popup__input_type_card-name');
-const inputCardUrl = document.querySelector('.popup__input_type_url')
+import { content,
+  profileTitle,
+  profileDescription,
+  placesList,
+  profileEditButton,
+  profileAddButton,
+  popupList,
+  popupCloseButtonList,
+  profilePopup,
+  popupNewCard,
+  imagePopup,
+  newCardFormElement,
+  profileFormElement,
+  nameInput,
+  jobInput,
+  deleteCardPopup,
+  avatarImagePopup,
+  profileImage
+ } from "./const.js";
+
+ 
+ 
+ 
+ 
+
+enableValidation(validationConfig)
 
 /*Функция открытия попапа картинки*/
 function openImage(element){
@@ -31,39 +50,44 @@ function openImage(element){
   openModal(imagePopup)
 } 
 
-/* Обработчики события submit */
-function profileFormSubmit(evt) {
-  evt.preventDefault(); 
-  const nameInputValue = nameInput.value;
-  const jobInputValue = jobInput.value
-  profileTitle.textContent = nameInputValue
-  profileDescription.textContent = jobInputValue
-  evt.target.reset()
-  closeModal(profilePopup)
+/* Замена данных пользователя в профиле */
+getUser()
+  .then((result) => {
+    profileTitle.textContent = result.name
+    profileDescription.textContent = result.about
+  })
+
+  // Функция для установки информации о пользователе на страницу
+let userId = "";
+function setUserInfo(user) {
+  profileTitle.textContent = user.name;
+  profileDescription.textContent = user.about;
+  avatarImagePopup.setAttribute(
+    "style",
+    `background-image: url('${user.avatar}')`,
+  );
+  return userId = user._id;
 }
 
-function newCardFormSubmit(evt) {
-  evt.preventDefault();
-  const obj = {
-    link: inputCardUrl.value,
-    name: inputCardName.value
-  }
-  placesList.prepend(createCard(obj, removeCard, addLike, openImage))
-  console.log(createCard)
-  closeModal(popupNewCard)
-  evt.target.reset()
-}
+
 
 /* Открытие попапов */
 profileEditButton.addEventListener('click', function(){
-  openModal(profilePopup)
+  clearValidation(profileFormElement, validationConfig);
   nameInput.value = profileTitle.textContent
   jobInput.value = profileDescription.textContent
+  openModal(profilePopup)
 })
 
 profileAddButton.addEventListener('click', function(){
+  clearValidation(newCardFormElement, validationConfig);
   openModal(popupNewCard)
   newCardFormElement.reset()
+})
+
+profileImage.addEventListener('click',function(){
+  
+  openModal(avatarImagePopup)
 })
 
 /* Закрытие попапов */
@@ -88,13 +112,36 @@ el.classList.add("popup_is-animated");
 /* Прикрепляем обработчик к форме:
 он будет следить за событием “submit” - «отправка» */
 profilePopup.addEventListener('submit', profileFormSubmit);
-popupNewCard.addEventListener('submit', newCardFormSubmit)
+popupNewCard.addEventListener('submit', function(event){
+  newCardFormSubmit(event, removeCard, addLike, openImage, userId)
+})
+deleteCardPopup.addEventListener('submit',handleCardDelete)
+ 
 
 
 /* Вывести карточки на страницу */
-  initialCards.forEach(function(element){
-    placesList.append(createCard(element, removeCard, addLike, openImage))
-  })
 
+getInitialCards()
+  .then((result) => {
+    result.forEach(function(element){
+      placesList.append(createCard(element, openPopupDelete, addLike, openImage,userId))
+    })
+  
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  }); 
+
+  
+
+  
+  Promise.all([getUser(), getCards()])
+  .then(([user, cards]) => {
+    setUserInfo(user);
+    getInitialCards(cards,openPopupDelete, addLike, openImage,userId);
+  })
+  .catch((err) => {
+    console.error("Произошла ошибка при получении данных:", err);
+  });
 
 
