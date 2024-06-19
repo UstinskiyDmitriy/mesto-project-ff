@@ -1,19 +1,21 @@
+import { postCard } from "../api.js";
+import { createCard } from "../card.js";
+import { closeModal } from "../modal.js";
+import {newCardForm,newNameInput,newUrlInput,placesList} from "../const.js";
+import { handleSubmit } from "./multiForms.js";
 
-/* Добавление новой карточки */
-import { handleSubmit } from "./handleSubmit";
-import { postCard } from "../api";
-import { inputCardName,inputCardUrl } from "../const";
-export function newCardFormSubmit(event, removeCard, addLike, openImage, userId) {
-  event.preventDefault()
+/* Обработчик отправки формы создания карточки */
+export function handleNewCardFormSubmit(event, callbacksObject, userId) {
   function makeRequest() {
-    return postCard(inputCardName.value, inputCardUrl.value)
+    return postCard(newNameInput.value,newUrlInput.value)
       .then((card) => {
-        if (card.ok) {
-          const newCardElement = createCard(card, removeCard, addLike, openImage, userId);
-          placesList.prepend(newCardElement);
-          closeModal(popupNewCard);
-        }
+        
+        const newCardElement = createCard(card, callbacksObject, userId);
+        
+        placesList.prepend(newCardElement); 
+        closeModal(newCardForm); 
       });
   }
-  handleSubmit(makeRequest);
+
+  handleSubmit(makeRequest, event);
 }

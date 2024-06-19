@@ -1,20 +1,27 @@
-/* Обработчики события submit */
-import { handleSubmit } from "./handleSubmit";
-import {nameInput,jobInput,profileTitle,profileDescription,profilePopup} from "../const"
-import { patchProfile } from "../api";
-import { closeModal } from "../modal";
-export function profileFormSubmit(evt) {
-  evt.preventDefault()
+import { patchUser } from "../../components/api.js";
+import { closeModal } from "../../components/modal.js";
+import {nameInput,jobInput,userJobElement,userNameElement,} from "../const.js";
+import { handleSubmit } from "./multiForms.js";
+
+/* Установка начальных значений */
+export function setInitialEditProfileFormValues() {
+  nameInput.value = userNameElement.textContent;
+  jobInput.value = userJobElement.textContent;
+}
+
+/* Обработчик отправки формы */
+export function handleFormSubmit(evt) {
+  
   function makeRequest() {
     const name = nameInput.value;
     const about = jobInput.value;
-    return patchProfile(name, about)
+    return patchUser(name, about)
       .then((dataUser) => {
-        profileTitle.textContent = dataUser.name;
-        profileDescription.textContent = dataUser.about;
-        
-        closeModal(profilePopup);
+        userNameElement.textContent = dataUser.name;
+        userJobElement.textContent = dataUser.about;
+        setInitialEditProfileFormValues();
+        closeModal(evt.target.closest(".popup_is-opened"));
       });
   }
-  handleSubmit(makeRequest);
+  handleSubmit(makeRequest, evt);
 }
