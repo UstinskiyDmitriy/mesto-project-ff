@@ -1,7 +1,7 @@
 {
   "name": "yandex.praktikum",
   "version": "0.0.1",
-  "description": "Learning platform",
+  "description": "",
   "main": "src/index.js",
   "scripts": {
     "build": "rd /s /q dist && webpack",
