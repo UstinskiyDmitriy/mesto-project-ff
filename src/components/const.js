@@ -21,6 +21,14 @@ const newNameInput = newPlaceFormElement.querySelector('.popup__input_type_card-
 const newUrlInput = newPlaceFormElement.querySelector('.popup__input_type_url');
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImage = document.querySelector('.popup__image');
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".button",
+  inactiveButtonClass: "button_inactive",
+  inputErrorClass: "form__input_type_error",
+  errorClass: "form__input-error_active",
+};
 
 export {
   editFormElement,
@@ -45,5 +53,6 @@ export {
   newNameInput,
   newUrlInput,
   popupImageCaption,
-  popupImage
+  popupImage,
+  validationConfig
 }

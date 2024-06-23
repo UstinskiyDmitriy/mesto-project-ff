@@ -12,13 +12,20 @@ import {
   profileAddButton,
   avatarForm,
   avatarImage,
+  avatarInput,
+  validationConfig,
+  newNameInput,
+  newUrlInput,
+  popupImage,
+  popupImageCaption,
+  buttonTypeCard
 } from "./const.js";
 
 import {getCards,getUser} from "./api.js";
 
 import {createCard,handleLikes} from "./card.js";
 
-import {clearValidation,validationConfig,enableValidation} from "./validation.js";
+import {clearValidation,enableValidation} from "./validation.js";
 
 import {handleFormSubmit,setInitialEditProfileFormValues} from "./forms/editProfileForm.js";
 
@@ -31,7 +38,7 @@ import {handleAvatarFormSubmit} from "./forms/avatarForm.js";
 enableValidation(validationConfig);
 
 /* Открытие попапа картинки */
-function openImagePopup(cardImg,popupImage,popupImageCaption,buttonTypeCard){
+function openImagePopup(cardImg){
   popupImage.src = cardImg.src;
   popupImage.alt = cardImg.alt;
   popupImageCaption.textContent = cardImg.alt;
@@ -55,11 +62,14 @@ profileEditButton.addEventListener("click", () => {
 /* Добавление слушателя кнопке создания новой карточки */
 profileAddButton.addEventListener("click", () => {
   clearValidation(newCardForm, validationConfig);
+  newNameInput.value ='';
+  newUrlInput.value = '';
   openModal(newCardForm);
 });
 /* Добавление слушателя редактирования аватара*/
 avatarImage.addEventListener("click", () => {
   clearValidation(avatarForm, validationConfig);
+  avatarInput.value = ''
   openModal(avatarForm);
 });
 /* Закрытие попапов */

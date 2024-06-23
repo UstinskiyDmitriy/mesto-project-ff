@@ -11,18 +11,21 @@ const apiRoutes = {
   cards: "cards",
   likes: "likes"
 }
+
+function checkResponse(res){
+  if (res.ok) {
+    return res.json();
+  }
+
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 /* Получение всех карточек */
 const getCards = () => {
   return fetch(`${config.baseUrl}/${apiRoutes.cards}`, {
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /* Добавление новой карточки */
@@ -35,13 +38,7 @@ const postCard = (name, link) => {
           link,
         })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /* Удаление карточки по идентификатору */
@@ -51,11 +48,7 @@ const deleteCardApi = (id) => {
     headers: config.headers,
   })
   .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
+    checkResponse(res)
   });
 };
 
@@ -64,13 +57,7 @@ const getUser = () => {
   return fetch(`${config.baseUrl}/${apiRoutes.user}`, {
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /*Обновление информации о пользователе */
@@ -83,13 +70,7 @@ const patchUser = (name, about) => {
           about,
         })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /* Добавление лайка карточке */
@@ -98,13 +79,7 @@ const addLikeCard = (id)  => {
     method: "PUT",
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /* Удаление лайка с карточки */
@@ -113,13 +88,7 @@ const deleteLikeCard = (id) => {
     method: "DELETE",
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(checkResponse)
 };
 
 /* Обновление аватара пользователя */
@@ -129,14 +98,7 @@ const patchAvatar = (avatar) => {
     headers: config.headers,
     body: JSON.stringify({ avatar:avatar}),
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${data.status}`);
-  });
-  
+  .then(checkResponse)
 }
 export {
   getCards,

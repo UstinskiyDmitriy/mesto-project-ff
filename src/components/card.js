@@ -1,14 +1,13 @@
 import { deleteLikeCard, addLikeCard } from "./api";
-import {popupImage,popupImageCaption,buttonTypeCard,} from "./const";
 
 /* Создание темплейта карточек */
-export function createCard(cards, callbacksObject, userId) {
+export function createCard(cards, callbacksObject,userId) {
   const {
     deleteCardCallback,
     openImageCallback,
     handleLikesCallback,
   } = callbacksObject;
-  
+
   const cardTemplate = document.querySelector("#card-template");
   const cardElement = cardTemplate.content.querySelector(".places__item").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
@@ -42,7 +41,7 @@ export function createCard(cards, callbacksObject, userId) {
   });
 
   cardImage.addEventListener("click", () => {
-    openImageCallback(cardImage, popupImage, popupImageCaption, buttonTypeCard);
+    openImageCallback(cardImage);
   });
 
   return cardElement;

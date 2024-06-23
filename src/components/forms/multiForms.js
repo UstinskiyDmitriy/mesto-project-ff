@@ -25,3 +25,4 @@ export function handleSubmit(request, evt, loadingText = "Сохранение..
       renderLoading(false, submitButton, initialText, loadingText);
     });
 }
+
